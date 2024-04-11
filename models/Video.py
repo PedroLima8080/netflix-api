@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, Float
-from __main__ import Base
+from sql import Base
 
 class Video(Base):
     __tablename__='video'

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from models.Video import Video
 from models.User import User
-from __main__ import Base
+from sql import Base
 
 class History(Base):
     __tablename__='history'

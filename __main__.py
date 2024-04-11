@@ -9,10 +9,10 @@ app = Flask('__main__')
 
 app.config['JWT_SECRET_KEY'] = 'your_secret_key'
 
-result = sql.init(app)
+result = sql.init()
 engine = result['engine']
 session = result['session']
-Base = declarative_base()
+Base = result['base']
 jwt = JWTManager(app)
 
 from models.History import History

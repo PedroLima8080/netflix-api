@@ -2,16 +2,18 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
-def init(app):
-    # url = URL.create(
-    # drivername="postgresql",
-    # username="coderpad",
-    # host="/tmp/postgresql/socket",
-    # database="coderpad"
-    # )
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
-    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # return SQLAlchemy(app)
-    engine = create_engine('sqlite:///db.sqlite')
-    Session = sessionmaker(bind=engine)
-    return {'engine': engine,'session': Session()}
+Base = None
+
+def init(test = False):
+    url = None
+    if test:
+        url = 'sqlite:///db.sqlite.test'
+    else: 
+        url = 'sqlite:///db.sqlite'
+        
+    engine = create_engine(url)
+    session = sessionmaker(bind=engine)
+    base = declarative_base()
+    global Base
+    Base = base
+    return {'engine': engine,'session': session(), 'base': base}

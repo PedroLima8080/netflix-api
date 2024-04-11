@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from models.Playlist import Playlist
 from models.Video import Video
-from __main__ import Base
+from sql import Base
 
 class PlaylistVideo(Base):
     __tablename__='playlist_video'

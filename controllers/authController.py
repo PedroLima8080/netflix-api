@@ -1,9 +1,10 @@
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from services.authService import AuthService
 from flask import request
+from __main__ import session
 
 def init(app):
-    authService = AuthService()
+    authService = AuthService(session)
     @app.route('/auth/register', methods=['POST'])
     def register():
         return authService.register(request.json)
