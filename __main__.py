@@ -1,13 +1,18 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from sqlalchemy.orm import declarative_base
+
 import sql
 
 app = Flask('__main__')
 
 app.config['JWT_SECRET_KEY'] = 'your_secret_key'
 
-db = sql.init(app)
+result = sql.init(app)
+engine = result['engine']
+session = result['session']
+Base = declarative_base()
 jwt = JWTManager(app)
 
 from models.History import History
@@ -28,6 +33,6 @@ controllers.playlistVideoController.init(app)
 controllers.historyController.init(app)
 
 with app.app_context():
-    db.create_all()
+    Base.metadata.create_all(engine)
 
 app.run(debug=True)

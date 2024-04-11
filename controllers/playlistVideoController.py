@@ -1,7 +1,7 @@
 from models.PlaylistVideo import PlaylistVideo
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import Flask, request, jsonify
-from __main__ import db
+from __main__ import session
 
 def init(app):
     @app.route('/playlist/<int:playlist_id>/videos', methods=['POST'])
@@ -17,8 +17,8 @@ def init(app):
             return jsonify({'error': 'Unauthorized access to playlist'}), 403
 
         new_playlist_video = PlaylistVideo(playlist_id=playlist_id, video_id=data['video_id'])
-        db.session.add(new_playlist_video)
-        db.session.commit()
+        session.add(new_playlist_video)
+        session.commit()
 
         return jsonify({'message': 'Playlist video created successfully'}), 201
 
@@ -30,7 +30,7 @@ def init(app):
         if not is_playlist_owner(current_user_id, playlist_id):
             return jsonify({'error': 'Unauthorized access to playlist'}), 403
 
-        playlist_videos = PlaylistVideo.query.filter_by(playlist_id=playlist_id).all()
+        playlist_videos = session.query(PlaylistVideo).filter_by(playlist_id=playlist_id).all()
         serialized_playlist_videos = [{'id': pv.id, 'playlist_id': pv.playlist_id, 'video_id': pv.video_id} for pv in playlist_videos]
         return jsonify(serialized_playlist_videos)
 
@@ -39,7 +39,7 @@ def init(app):
     def delete_playlist_video(playlist_id, playlist_video_id):
         current_user_id = get_jwt_identity()
 
-        playlist_video = PlaylistVideo.query.get(playlist_video_id)
+        playlist_video = session.query(PlaylistVideo).get(playlist_video_id)
         if not playlist_video:
             return jsonify({'error': 'Playlist video not found'}), 404
 
@@ -49,12 +49,12 @@ def init(app):
         if not is_playlist_owner(current_user_id, playlist_id):
             return jsonify({'error': 'Unauthorized access to playlist'}), 403
 
-        db.session.delete(playlist_video)
-        db.session.commit()
+        session.delete(playlist_video)
+        session.commit()
 
         return jsonify({'message': 'Playlist video deleted successfully'})
 
     def is_playlist_owner(user_id, playlist_id):
         from models.Playlist import Playlist
-        playlist = Playlist.query.filter_by(id=playlist_id, user_id=user_id).first()
+        playlist = session.query(Playlist).filter_by(id=playlist_id, user_id=user_id).first()
         return playlist is not None

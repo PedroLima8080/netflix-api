@@ -1,9 +1,11 @@
-from __main__ import db
+from sqlalchemy import Column, Integer, String, Text, Float
+from __main__ import Base
 
-class Video(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    genre = db.Column(db.String(50), nullable=False)
-    release_year = db.Column(db.Integer, nullable=False)
-    rating = db.Column(db.Float, nullable=False)
+class Video(Base):
+    __tablename__='video'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(100), nullable=False)
+    description = Column(Text, nullable=False)
+    genre = Column(String(50), nullable=False)
+    release_year = Column(Integer, nullable=False)
+    rating = Column(Float, nullable=False)

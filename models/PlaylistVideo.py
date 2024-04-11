@@ -1,6 +1,10 @@
-from __main__ import db
+from sqlalchemy import Column, Integer, String, ForeignKey
+from models.Playlist import Playlist
+from models.Video import Video
+from __main__ import Base
 
-class PlaylistVideo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'), nullable=False)
-    video_id = db.Column(db.Integer, db.ForeignKey('video.id'), nullable=False)
+class PlaylistVideo(Base):
+    __tablename__='playlist_video'
+    id = Column(Integer, primary_key=True)
+    playlist_id = Column(Integer, ForeignKey(Playlist.id), nullable=False)
+    video_id = Column(Integer, ForeignKey(Video.id), nullable=False)
