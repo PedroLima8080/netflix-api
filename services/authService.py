@@ -1,5 +1,4 @@
-from models.User import User
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token
 from flask import Flask, jsonify
 
 class AuthService():
@@ -9,6 +8,7 @@ class AuthService():
         self.session = session
         
     def register(self, data):
+        from models.User import User
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
@@ -18,6 +18,7 @@ class AuthService():
         return jsonify({'message': 'User created successfully', 'user_id': new_user.id}), 201
 
     def login(self, data):
+        from models.User import User
         email = data.get('email')
         password = data.get('password')
         user = self.session.query(User).filter_by(email=email, password=password).first()

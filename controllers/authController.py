@@ -1,4 +1,4 @@
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token
 from services.authService import AuthService
 from flask import request
 from __main__ import session
