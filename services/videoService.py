@@ -33,7 +33,7 @@ class VideoService:
         if not all(field in data for field in required_fields):
             return jsonify({'error': 'Missing required fields'}), 400
 
-        video = self.session.query(Video).get(video_id)
+        video = self.session.get(Video, video_id)
         if not video:
             return jsonify({'error': 'Video not found'}), 404
 
@@ -58,7 +58,7 @@ class VideoService:
 
     def get_video(self, video_id):
         from models.Video import Video
-        video = self.session.query(Video).get(video_id)
+        video = self.session.get(Video, video_id)
         if video:
             return jsonify({'id': video.id, 'title': video.title, 'description': video.description, 'genre': video.genre, 'release_year': video.release_year, 'rating': video.rating}), 200
         else:
@@ -70,7 +70,7 @@ class VideoService:
     
     def delete_video(self, video_id):
         from models.Video import Video
-        video = self.session.query(Video).get(video_id)
+        video = self.session.get(Video, video_id)
         if not video:
             return jsonify({'error': 'Video not found'}), 404
 
@@ -78,3 +78,7 @@ class VideoService:
         self.session.commit()
 
         return jsonify({'message': 'Video deleted successfully'})
+
+    def delete_all(self):
+        from models.Video import Video
+        self.session.query(Video).delete()

@@ -4,24 +4,23 @@ from sql import init
 from flask_jwt_extended import JWTManager
 from app_setup import app_setup
 
+db = init(True)
+import models.Models
+
 @pytest.fixture
 def app():
     app = app_setup()
-    db = init(True)
-    import models.Models
     with app.app_context():
-        db['base'].metadata.drop_all(db['engine'])
         db['base'].metadata.create_all(db['engine'])
         
     yield app
 
-    db['base'].metadata.drop_all(db['engine'])
-    db['base'].metadata.create_all(db['engine'])
+    with app.app_context():
+        db['base'].metadata.drop_all(db['engine'])
 
-@pytest.fixture
-def auth_service():
+@pytest.fixture()
+def auth_service(app):
     from services.authService import AuthService
-    db = init(True)
     return AuthService(db['session'])
 
 @pytest.fixture

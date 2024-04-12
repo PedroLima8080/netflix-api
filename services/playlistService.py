@@ -14,30 +14,30 @@ class PlaylistService:
 
         new_playlist = Playlist(user_id=user_id, name=data['name'])
 
-        session.add(new_playlist)
-        session.commit()
+        self.session.add(new_playlist)
+        self.session.commit()
 
         return jsonify({'message': 'Playlist created successfully'}), 201
 
     def get_playlists(self, user_id):
-        playlists = session.query(Playlist).filter_by(user_id=user_id).all()
+        playlists = self.session.query(Playlist).filter_by(user_id=user_id).all()
         serialized_playlists = [{'id': playlist.id, 'user_id': playlist.user_id, 'name': playlist.name} for playlist in playlists]
         return jsonify(serialized_playlists)
 
     def get_playlist(self, user_id, playlist_id):
-        playlist = session.query(Playlist).filter_by(id=playlist_id, user_id=user_id).first()
+        playlist = self.session.query(Playlist).filter_by(id=playlist_id, user_id=user_id).first()
         if not playlist:
             return jsonify({'error': 'Playlist not found'}), 404
         serialized_playlist = {'id': playlist.id, 'user_id': playlist.user_id, 'name': playlist.name}
         return jsonify(serialized_playlist)
 
     def delete_playlist(self, user_id, playlist_id):
-        playlist = session.query(Playlist).filter_by(id=playlist_id, user_id=user_id).first()
+        playlist = self.session.query(Playlist).filter_by(id=playlist_id, user_id=user_id).first()
 
         if not playlist:
             return jsonify({'error': 'Playlist not found or unauthorized'}), 404
 
-        session.delete(playlist)
-        session.commit()
+        self.session.delete(playlist)
+        self.session.commit()
 
         return jsonify({'message': 'Playlist deleted successfully'})
