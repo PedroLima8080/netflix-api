@@ -39,3 +39,30 @@ def test_add_playlist(app, auth_service, playlist_service):
         playlist_service.create_playlist(user_id, {'name': 'name...'})
         result = playlist_service.get_playlists(user_id)
         assert len(result.json) == 1
+
+def test_get_playlists(app, auth_service, playlist_service):
+    with app.app_context():
+        user_id = create_user_for_test(auth_service)
+        result = playlist_service.get_playlists(user_id)
+        assert len(result.json) == 0
+        playlist_service.create_playlist(user_id, {'name': 'name...'})
+        playlist_service.create_playlist(user_id, {'name': 'name...'})
+        result = playlist_service.get_playlists(user_id)
+        assert len(result.json) == 2
+
+def test_get_playlist(app, auth_service, playlist_service):
+    with app.app_context():
+        user_id = create_user_for_test(auth_service)
+        playlist_service.create_playlist(user_id, {'name': 'name...'})
+        result = playlist_service.get_playlist(user_id, 1)
+        assert result.json['name'] == 'name...'
+
+def test_delete_playlist(app, auth_service, playlist_service):
+    with app.app_context():
+        user_id = create_user_for_test(auth_service)
+        playlist_service.create_playlist(user_id, {'name': 'name...'})
+        playlist_service.create_playlist(user_id, {'name': 'name...'})
+        result = playlist_service.get_playlists(user_id)
+        assert len(result.json) == 2
+        result = playlist_service.delete_playlist(user_id, 1)
+        assert len(result.json) == 1

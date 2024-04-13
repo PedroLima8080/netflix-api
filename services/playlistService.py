@@ -17,7 +17,7 @@ class PlaylistService:
         self.session.add(new_playlist)
         self.session.commit()
 
-        return jsonify({'message': 'Playlist created successfully'}), 201
+        return jsonify({'message': 'Playlist created successfully', 'id': new_playlist.id}), 201
 
     def get_playlists(self, user_id):
         playlists = self.session.query(Playlist).filter_by(user_id=user_id).all()
